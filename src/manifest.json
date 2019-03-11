@@ -1,0 +1,25 @@
+{
+  "name": "Foodreau",
+  "description": "Data supplier plugin for filling textboxes with food recipes",
+  "author": "Max David",
+  "homepage": "https://github.com/maxdavid/sketch-foodreau",
+  "compatibleVersion": 3,
+  "bundleVersion": 1,
+  "icon": "icon.png",
+  "suppliesData": true,
+  "commands": [
+    {
+      "script": "foodreau.js",
+      "handlers": {
+        "actions": {
+          "Startup": "onStartup",
+          "Shutdown": "onShutdown",
+          "SupplyData": "onSupplyData"
+        }
+      }
+    }
+  ],
+  "menu": {
+    "title": "Foodreau"
+  }
+}
