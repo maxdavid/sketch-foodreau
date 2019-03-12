@@ -9,12 +9,16 @@
   "suppliesData": true,
   "commands": [
     {
+      "name": "Foodreau",
+      "script": "foodreau.js"
+    },
+    {
       "script": "foodreau.js",
       "handlers": {
         "actions": {
           "Startup": "onStartup",
           "Shutdown": "onShutdown",
-          "SupplyData": "onSupplyData"
+          "SupplyRandomRecipe": "onSupplyRandomRecipe"
         }
       }
     }
