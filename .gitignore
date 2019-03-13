@@ -8,3 +8,7 @@ npm-debug.log
 
 # mac
 .DS_Store
+
+# secret
+src/.secret.js
+
