@@ -18,7 +18,7 @@
         "actions": {
           "Startup": "onStartup",
           "Shutdown": "onShutdown",
-          "SupplyRandomRecipe": "onSupplyRandomRecipe"
+          "SupplyRandomTitle": "onSupplyRandomTitle"
         }
       }
     }

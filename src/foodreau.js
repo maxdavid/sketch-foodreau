@@ -7,23 +7,23 @@ const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.co
 const API_KEY = api.spoonacular.apikey
 
 export function onStartup () {
-  DataSupplier.registerDataSupplier('public.text', 'Random Recipe', 'SupplyRandomRecipe')
+  DataSupplier.registerDataSupplier('public.text', 'Random Recipe Title', 'SupplyRandomTitle')
 }
 
 export function onShutdown () {
   DataSupplier.deregisterDataSuppliers()
 }
 
-export function onSupplyRandomRecipe (context) {
+export function onSupplyRandomTitle (context) {
   let dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    let data = getRandomRecipe(item, index, dataKey)
+    let data = getRandomTitle(item, index, dataKey)
     //DataSupplier.supplyDataAtIndex(dataKey, data, index)
   })
 }
 
-export function getRandomRecipe (item, index, dataKey) {
+export function getRandomTitle (item, index, dataKey) {
   const API_OPTIONS = {
     'headers': {
       'X-RapidAPI-Key': API_KEY
