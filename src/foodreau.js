@@ -18,24 +18,23 @@ export function onShutdown () {
 }
 
 export function onSupplyRandomTitle (context) {
-  let dataKey = context.data.key
+  const dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    let data = getRandomTitle(item, index, dataKey)
-    //DataSupplier.supplyDataAtIndex(dataKey, data, index)
+    let data = getRandomRecipeSection(item, index, dataKey, 'title')
   })
 }
 
 export function onSupplyRandomSource (context) {
-  let dataKey = context.data.key
+  const dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    let data = getRandomSource(item, index, dataKey)
-    //DataSupplier.supplyDataAtIndex(dataKey, data, index)
+    let data = getRandomRecipeSection(item, index, dataKey, 'creditText')
   })
 }
 
-export function getRandomTitle (item, index, dataKey) {
+export function getRandomRecipeSection (item, index, dataKey, section) {
+  // section can be 'title' 'creditText' etc
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
@@ -47,28 +46,7 @@ export function getRandomTitle (item, index, dataKey) {
         return json
       }
     })
-    .then(json => loadText(json.recipes[0].title, dataKey, index, item))
-    .catch(err => console.log(err))
-
-  function loadText (data, dataKey, index, item) {
-    console.log(data)
-    DataSupplier.supplyDataAtIndex(dataKey, data, index)
-  }
-}
-
-export function getRandomSource (item, index, dataKey) {
-  fetch(API_ENDPOINT, API_OPTIONS)
-    .then(res => res.json())
-    .then(json => {
-      if (json.message) {
-        return Promise.reject(json.message)
-      } else if (typeof json.recipes !== 'undefined') {
-        return json
-      } else {
-        return json
-      }
-    })
-    .then(json => loadText(json.recipes[0].creditText, dataKey, index, item))
+    .then(json => loadText(json.recipes[0][section], dataKey, index, item))
     .catch(err => console.log(err))
 
   function loadText (data, dataKey, index, item) {
