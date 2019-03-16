@@ -19,7 +19,8 @@
           "Startup": "onStartup",
           "Shutdown": "onShutdown",
           "SupplyRandomTitle": "onSupplyRandomTitle",
-          "SupplyRandomSource": "onSupplyRandomSource"
+          "SupplyRandomSource": "onSupplyRandomSource",
+          "SupplyRandomImage": "onSupplyRandomImage"
         }
       }
     }
