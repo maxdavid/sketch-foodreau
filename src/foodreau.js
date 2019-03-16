@@ -21,6 +21,13 @@ export function onStartup () {
 
 export function onShutdown () {
   DataSupplier.deregisterDataSuppliers()
+  try {
+    if (fs.existsSync(FOLDER)) {
+      fs.rmdirSync(FOLDER)
+    }
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export function onSupplyRandomTitle (context) {
