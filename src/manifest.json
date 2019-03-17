@@ -20,6 +20,7 @@
           "Shutdown": "onShutdown",
           "SupplyRandomTitle": "onSupplyRandomTitle",
           "SupplyRandomSource": "onSupplyRandomSource",
+          "SupplyRandomContent": "onSupplyRandomContent",
           "SupplyRandomImage": "onSupplyRandomImage"
         }
       }

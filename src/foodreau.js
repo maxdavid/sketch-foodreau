@@ -16,6 +16,7 @@ const FOLDER = path.join(os.tmpdir(), 'com.sketchapp.foodreau-plugin')
 export function onStartup () {
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Title', 'SupplyRandomTitle')
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Source', 'SupplyRandomSource')
+  DataSupplier.registerDataSupplier('public.text', 'Random Recipe Content from Layer Names', 'SupplyRandomContent')
   DataSupplier.registerDataSupplier('public.image', 'Random Recipe Image', 'SupplyRandomImage')
 }
 
@@ -43,6 +44,14 @@ export function onSupplyRandomSource (context) {
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
     let data = getRandomRecipeSection(item, index, dataKey, 'creditText')
+  })
+}
+
+export function onSupplyRandomContent (context) {
+  const dataKey = context.data.key
+  const items = util.toArray(context.data.items).map(sketch.fromNative)
+  items.forEach((item, index) => {
+    let data = getRandomRecipeSection(item, index, dataKey, item.name)
   })
 }
 
