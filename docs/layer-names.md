@@ -5,13 +5,13 @@ When fetching recipe content, the selected text layers must be named according t
 |Layer name           |Description                                  |
 |:--------------------|:--------------------------------------------|
 |`title`              |Title of the recipe                          |
-|`creditText`         |Name of recipe source                        |
-|`sourceUrl`          |URL of source recipe                         |
-|`image`              |URL of image                                 |
 |`instructions`       |Full text of recipe preparation instructions |
+|`extendedIngredients`|Collected list of recipe ingredients         |
+|`creditText`         |Name of recipe source                        |
+|`sourceUrl`          |URL of recipe source                         |
+|`image`              |URL of image                                 |
 |`servings`           |Number of servings                           |
 |`readyInMinutes`     |Time required for recipe                     |
-|~~`extendedIngredients`~~|WIP |
 
 ### Not-so-common fields
 |Layer name           |Description                                  |
