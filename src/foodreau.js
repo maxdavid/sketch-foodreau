@@ -134,7 +134,7 @@ function getRandomRecipeImage (item, index, dataKey) {
       .then(saveTempFileFromImageData)
       .catch((err) => {
         console.error(err)
-        //return context.plugin.urlForResourceNamed('placeholder.png').path()
+        return context.plugin.urlForResourceNamed('placeholder.png').path()
       })
   }
 
