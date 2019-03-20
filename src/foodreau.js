@@ -68,8 +68,9 @@ export function onSupplyRandomImage (context) {
   })
 }
 
-export function getRandomRecipeSection (item, index, dataKey, section) {
-  // section can be 'title' 'creditText' etc
+function getRandomRecipeSection (item, index, dataKey, section) {
+  // section must be in API_KEYS
+  UI.message("Fetching recipe...")
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
@@ -101,7 +102,8 @@ export function getRandomRecipeSection (item, index, dataKey, section) {
   }
 }
 
-export function getRandomRecipeImage (item, index, dataKey) {
+function getRandomRecipeImage (item, index, dataKey) {
+  UI.message("Fetching recipe...")
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
@@ -120,7 +122,6 @@ export function getRandomRecipeImage (item, index, dataKey) {
     console.log(data)
     return getImageFromURL(data).then(imagePath => {
       if (!imagePath) {
-        // TODO: something wrong happened, show something to the user
         return
       }
       DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
@@ -144,7 +145,6 @@ export function getRandomRecipeImage (item, index, dataKey) {
       fs.mkdirSync(FOLDER)
     } catch (err) {
       // probably because the folder already exists
-      // TODO: check that it is really because it already exists
     }
     try {
       fs.writeFileSync(imagePath, imageData, 'NSData')
