@@ -70,7 +70,7 @@ export function onSupplyRandomImage (context) {
 
 function getRandomRecipeSection (item, index, dataKey, section) {
   // section must be in API_KEYS
-  UI.message("Fetching recipe...")
+  UI.message('Fetching recipe...')
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
@@ -103,7 +103,7 @@ function getRandomRecipeSection (item, index, dataKey, section) {
 }
 
 function getRandomRecipeImage (item, index, dataKey) {
-  UI.message("Fetching recipe...")
+  UI.message('Fetching recipe...')
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
