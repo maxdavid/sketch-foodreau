@@ -5,16 +5,17 @@ const path = require('path')
 const util = require('util')
 const fs = require('@skpm/fs')
 
-const api = require('./.secret.js')
-
-const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1'
-const API_KEY = api.spoonacular.apikey
-const API_OPTIONS = { 'headers': { 'X-RapidAPI-Key': API_KEY } }
-const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servings','readyInMinutes','extendedIngredients','vegetarian','vegan','glutenFree','dairyFree','veryHealthy','cheap','veryPopular','sustainable','lowFodmap','ketogenic','whole30','weightWatcherSmartPoints','pricePerServing','gaps','healthScore','id']
-
 const FOLDER = path.join(os.tmpdir(), 'com.sketchapp.foodreau-plugin')
 
+const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1'
+const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servings','readyInMinutes','extendedIngredients','vegetarian','vegan','glutenFree','dairyFree','veryHealthy','cheap','veryPopular','sustainable','lowFodmap','ketogenic','whole30','weightWatcherSmartPoints','pricePerServing','gaps','healthScore','id']
+
+let usingAPI = false;
+let API_KEY = ''
+let API_OPTIONS = ''
+
 export function onStartup () {
+  API_KEY = getAPIKey()
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Title', 'SupplyRandomTitle')
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Source', 'SupplyRandomSource')
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Content from Layer Names', 'SupplyRandomContent')
@@ -29,6 +30,24 @@ export function onShutdown () {
     }
   } catch (err) {
     console.error(err)
+  }
+}
+
+export function getAPIKey () {
+  // return api key if exists, return false if not
+  let api = ''
+  try {
+    api = require('./.secret.js')
+    usingAPI = true
+    console.log(usingAPI)
+    API_OPTIONS = { 'headers': { 'X-RapidAPI-Key': api.spoonacular.apikey } }
+    console.log(API_OPTIONS)
+    return api.spoonacular.apikey
+  } catch (err) {
+    if (err.code !== 'MODULE_NOT_FOUND') {
+      console.log(err)
+      return false
+    }
   }
 }
 
@@ -71,6 +90,8 @@ export function onSupplyRandomImage (context) {
 function getRandomRecipeSection (item, index, dataKey, section) {
   // section must be in API_KEYS
   UI.message('Fetching recipe...')
+  console.log(usingAPI)
+  //console.log(API_KEY)
   fetch(API_ENDPOINT, API_OPTIONS)
     .then(res => res.json())
     .then(json => {
