@@ -12,9 +12,9 @@ const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servi
 
 let API_KEY = getAPIKey()
 let API_OPTIONS = { 'headers': { 'X-RapidAPI-Key': API_KEY } }
+const BACKUP_RECIPES = JSON.parse(fs.readFileSync(context.plugin.urlForResourceNamed('backup/recipes.js').path(), 'utf8'))
 
 export function onStartup () {
-  API_KEY = getAPIKey()
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Title', 'SupplyRandomTitle')
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Source', 'SupplyRandomSource')
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Content from Layer Names', 'SupplyRandomContent')
@@ -38,12 +38,7 @@ export function getAPIKey () {
   try {
     api = require('./.secret.js')
     return api.spoonacular.apikey
-  } catch (err) {
-    if (err.code !== 'MODULE_NOT_FOUND') {
-      console.log(err)
-      return false
-    }
-  }
+  } catch (err) { return false }
 }
 
 export function onSupplyRandomTitle (context) {
@@ -106,31 +101,35 @@ function getRandomRecipeSection (item, index, dataKey, section) {
     console.log(data)
     DataSupplier.supplyDataAtIndex(dataKey, data, index)
   }
+}
 
-  function convertIngredientsArray (data) {
-    let text = ''
-    for (var ingredient in data) {
-      text += data[ingredient]['original'] + '\n'
-    }
-    return text
+function convertIngredientsArray (data) {
+  let text = ''
+  for (var ingredient in data) {
+    text += data[ingredient]['original'] + '\n'
   }
+  return text
 }
 
 function getRandomRecipeImage (item, index, dataKey) {
   UI.message('Fetching recipe...')
-  fetch(API_ENDPOINT, API_OPTIONS)
-    .then(res => res.json())
-    .then(json => {
-      if (json.message) {
-        return Promise.reject(json.message)
-      } else if (typeof json.recipes !== 'undefined') {
-        return json
-      } else {
-        return json
-      }
-    })
-    .then(json => loadImage(json.recipes[0]['image'], dataKey, index, item))
-    .catch(err => console.log(err))
+  if (API_KEY) {
+    fetch(API_ENDPOINT, API_OPTIONS)
+      .then(res => res.json())
+      .then(json => {
+        if (json.message) {
+          return Promise.reject(json.message)
+        } else if (typeof json.recipes !== 'undefined') {
+          return json
+        } else {
+          return json
+        }
+      })
+      .then(json => loadImage(json.recipes[0]['image'], dataKey, index, item))
+      .catch(err => console.log(err))
+  } else {
+    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
+  }
 
   function loadImage (data, dataKey, index, item) {
     console.log(data)
@@ -140,32 +139,32 @@ function getRandomRecipeImage (item, index, dataKey) {
       }
       DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
     })
-  }
 
-  function getImageFromURL (url) {
-    return fetch(url)
-      .then(res => res.blob())
-      .then(saveTempFileFromImageData)
-      .catch((err) => {
-        console.error(err)
-        return context.plugin.urlForResourceNamed('placeholder.png').path()
-      })
-  }
-
-  function saveTempFileFromImageData (imageData) {
-    const guid = NSProcessInfo.processInfo().globallyUniqueString()
-    const imagePath = path.join(FOLDER, `${guid}.jpg`)
-    try {
-      fs.mkdirSync(FOLDER)
-    } catch (err) {
-      // probably because the folder already exists
+    function getImageFromURL (url) {
+      return fetch(url)
+        .then(res => res.blob())
+        .then(saveTempFileFromImageData)
+        .catch((err) => {
+          console.error(err)
+          return context.plugin.urlForResourceNamed('placeholder.png').path()
+        })
     }
-    try {
-      fs.writeFileSync(imagePath, imageData, 'NSData')
-      return imagePath
-    } catch (err) {
-      console.error(err)
-      return undefined
+
+    function saveTempFileFromImageData (imageData) {
+      const guid = NSProcessInfo.processInfo().globallyUniqueString()
+      const imagePath = path.join(FOLDER, `${guid}.jpg`)
+      try {
+        fs.mkdirSync(FOLDER)
+      } catch (err) {
+        // probably because the folder already exists
+      }
+      try {
+        fs.writeFileSync(imagePath, imageData, 'NSData')
+        return imagePath
+      } catch (err) {
+        console.error(err)
+        return undefined
+      }
     }
   }
 }
