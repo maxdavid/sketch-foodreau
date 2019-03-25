@@ -80,19 +80,23 @@ export function onSupplyRandomImage (context) {
 function getRandomRecipeSection (item, index, dataKey, section) {
   // section must be in API_KEYS
   UI.message('Fetching recipe...')
-  fetch(API_ENDPOINT, API_OPTIONS)
-    .then(res => res.json())
-    .then(json => {
-      if (json.message) {
-        return Promise.reject(json.message)
-      } else if (typeof json.recipes !== 'undefined') {
-        return json
-      } else {
-        return json
-      }
-    })
-    .then(json => loadText(json.recipes[0][section], dataKey, index, item))
-    .catch(err => console.log(err))
+  if (API_KEY) {
+    fetch(API_ENDPOINT, API_OPTIONS)
+      .then(res => res.json())
+      .then(json => {
+        if (json.message) {
+          return Promise.reject(json.message)
+        } else if (typeof json.recipes !== 'undefined') {
+          return json
+        } else {
+          return json
+        }
+      })
+      .then(json => loadText(json.recipes[0][section], dataKey, index, item))
+      .catch(err => console.log(err))
+  } else {
+    loadText(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
+  }
 
   function loadText (data, dataKey, index, item) {
     if (typeof data === 'object') {
