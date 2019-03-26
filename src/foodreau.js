@@ -61,7 +61,7 @@ export function onSupplyRandomContent (context) {
   const dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    if (!API_KEYS.includes(item.name)) {
+    if (!API_KEYS.includes(item.name) && item.type === 'Text') {
       UI.message('"' + item.name + '" ' + 'is not a valid recipe field name')
     } else {
       getRandomRecipeSection(item, index, dataKey, item.name)
@@ -92,12 +92,18 @@ function getRandomRecipeSection (item, index, dataKey, section) {
           return json
         }
       })
-      .then(json => loadText(json.recipes[0][section], dataKey, index, item))
+      .then(json => {
+        if (item.type === 'Text') {
+          loadText(json.recipes[0][section], dataKey, index, item)
+        } else {
+          loadImage(json.recipes[0]['image'], dataKey, index, item)
+        }
+      })
       .catch(err => console.log(err))
-  } else if (section === 'image') {
-    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
-  } else {
+  } else if (item.type === 'Text') {
     loadText(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
+  } else {
+    loadImage(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   }
 
   function loadText (data, dataKey, index, item) {
