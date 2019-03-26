@@ -94,6 +94,8 @@ function getRandomRecipeSection (item, index, dataKey, section) {
       })
       .then(json => loadText(json.recipes[0][section], dataKey, index, item))
       .catch(err => console.log(err))
+  } else if (section === 'image') {
+    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
   } else {
     loadText(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   }
@@ -104,35 +106,14 @@ function getRandomRecipeSection (item, index, dataKey, section) {
     }
     console.log(data)
     DataSupplier.supplyDataAtIndex(dataKey, data, index)
-  }
-}
 
-function convertIngredientsArray (data) {
-  let text = ''
-  for (var ingredient in data) {
-    text += data[ingredient]['original'] + '\n'
-  }
-  return text
-}
-
-function getRandomRecipeImage (item, index, dataKey) {
-  UI.message('Fetching recipe...')
-  if (API_KEY) {
-    fetch(API_ENDPOINT, API_OPTIONS)
-      .then(res => res.json())
-      .then(json => {
-        if (json.message) {
-          return Promise.reject(json.message)
-        } else if (typeof json.recipes !== 'undefined') {
-          return json
-        } else {
-          return json
-        }
-      })
-      .then(json => loadImage(json.recipes[0]['image'], dataKey, index, item))
-      .catch(err => console.log(err))
-  } else {
-    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
+    function convertIngredientsArray (data) {
+      let text = ''
+      for (var ingredient in data) {
+        text += data[ingredient]['original'] + '\n'
+      }
+      return text
+    }
   }
 
   function loadImage (data, dataKey, index, item) {
@@ -171,4 +152,26 @@ function getRandomRecipeImage (item, index, dataKey) {
       }
     }
   }
+}
+
+function getRandomRecipeImage (item, index, dataKey) {
+  UI.message('Fetching recipe...')
+  if (API_KEY) {
+    fetch(API_ENDPOINT, API_OPTIONS)
+      .then(res => res.json())
+      .then(json => {
+        if (json.message) {
+          return Promise.reject(json.message)
+        } else if (typeof json.recipes !== 'undefined') {
+          return json
+        } else {
+          return json
+        }
+      })
+      .then(json => loadImage(json.recipes[0]['image'], dataKey, index, item))
+      .catch(err => console.log(err))
+  } else {
+    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
+  }
+
 }

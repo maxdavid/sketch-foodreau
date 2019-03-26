@@ -21,7 +21,7 @@
           "SupplyRandomTitle": "onSupplyRandomTitle",
           "SupplyRandomSource": "onSupplyRandomSource",
           "SupplyRandomContent": "onSupplyRandomContent",
-          "SupplyRandomImage": "onSupplyRandomImage"
+          "SupplyRandomImage": "onSupplyRandomContent"
         }
       }
     }
