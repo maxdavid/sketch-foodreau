@@ -85,25 +85,30 @@ function getRandomRecipeSection (item, index, dataKey, section) {
         }
       })
       .then(json => {
-        if (item.type === 'Text') {
-          loadText(json.recipes[0][section], dataKey, index, item)
-        } else {
-          loadImage(json.recipes[0]['image'], dataKey, index, item)
-        }
+        loadData(json.recipes[0][section], dataKey, index, item)
       })
       .catch(err => console.log(err))
-  } else if (item.type === 'Text') {
-    loadText(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   } else {
-    loadImage(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
+    loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   }
 
-  function loadText (data, dataKey, index, item) {
-    if (typeof data === 'object') {
-      data = convertIngredientsArray(data)
+  function loadData (data, dataKey, index, item) {
+    if (item.type === 'Text') {
+      console.log('hi')
+      if (typeof data === 'object') {
+        data = convertIngredientsArray(data)
+      }
+      console.log(data)
+      DataSupplier.supplyDataAtIndex(dataKey, data, index)
+    } else {
+      return getImageFromURL(data).then(imagePath => {
+        if (!imagePath) {
+          return
+        }
+        console.log(imagePath)
+        DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
+      })
     }
-    console.log(data)
-    DataSupplier.supplyDataAtIndex(dataKey, data, index)
 
     function convertIngredientsArray (data) {
       let text = ''
@@ -112,19 +117,9 @@ function getRandomRecipeSection (item, index, dataKey, section) {
       }
       return text
     }
-  }
-
-  function loadImage (data, dataKey, index, item) {
-    console.log(data)
-    return getImageFromURL(data).then(imagePath => {
-      if (!imagePath) {
-        return
-      }
-      DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
-    })
 
     function getImageFromURL (url) {
-      return fetch(url)
+      return fetch(API_ENDPOINT, API_OPTIONS)
         .then(res => res.blob())
         .then(saveTempFileFromImageData)
         .catch((err) => {
