@@ -69,14 +69,6 @@ export function onSupplyRandomContent (context) {
   })
 }
 
-export function onSupplyRandomImage (context) {
-  const dataKey = context.data.key
-  const items = util.toArray(context.data.items).map(sketch.fromNative)
-  items.forEach((item, index) => {
-    let data = getRandomRecipeImage(item, index, dataKey)
-  })
-}
-
 function getRandomRecipeSection (item, index, dataKey, section) {
   // section must be in API_KEYS
   UI.message('Fetching recipe...')
@@ -158,26 +150,4 @@ function getRandomRecipeSection (item, index, dataKey, section) {
       }
     }
   }
-}
-
-function getRandomRecipeImage (item, index, dataKey) {
-  UI.message('Fetching recipe...')
-  if (API_KEY) {
-    fetch(API_ENDPOINT, API_OPTIONS)
-      .then(res => res.json())
-      .then(json => {
-        if (json.message) {
-          return Promise.reject(json.message)
-        } else if (typeof json.recipes !== 'undefined') {
-          return json
-        } else {
-          return json
-        }
-      })
-      .then(json => loadImage(json.recipes[0]['image'], dataKey, index, item))
-      .catch(err => console.log(err))
-  } else {
-    loadImage(BACKUP_RECIPES['image'][Math.floor(Math.random() * BACKUP_RECIPES['image'].length)], dataKey, index, item)
-  }
-
 }
