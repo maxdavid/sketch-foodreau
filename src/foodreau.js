@@ -70,8 +70,11 @@ export function onSupplyRandomContent (context) {
 }
 
 function getRandomRecipeSection (item, index, dataKey, section) {
-  // section must be in API_KEYS
+  // section must be in API_KEYS or item be an image
   UI.message('Fetching recipe...')
+  if (item.type != 'Text') {
+    section = 'image'
+  }
   if (API_KEY) {
     fetch(API_ENDPOINT, API_OPTIONS)
       .then(res => res.json())
@@ -93,19 +96,17 @@ function getRandomRecipeSection (item, index, dataKey, section) {
   }
 
   function loadData (data, dataKey, index, item) {
+    console.log(data)
     if (item.type === 'Text') {
-      console.log('hi')
       if (typeof data === 'object') {
         data = convertIngredientsArray(data)
       }
-      console.log(data)
       DataSupplier.supplyDataAtIndex(dataKey, data, index)
     } else {
       return getImageFromURL(data).then(imagePath => {
         if (!imagePath) {
           return
         }
-        console.log(imagePath)
         DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
       })
     }
@@ -119,7 +120,7 @@ function getRandomRecipeSection (item, index, dataKey, section) {
     }
 
     function getImageFromURL (url) {
-      return fetch(API_ENDPOINT, API_OPTIONS)
+      return fetch(url)
         .then(res => res.blob())
         .then(saveTempFileFromImageData)
         .catch((err) => {
