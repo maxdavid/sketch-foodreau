@@ -1,7 +1,10 @@
 {
   "name": "foodreau",
-  "version": "0.1.0",
-  "description": "A DataSupplier plugin",
+  "version": "1.0.0",
+  "description": "Data supplier plugin for filling textboxes with food recipes",
+  "author": "Max David",
+  "repository": "https://github.com/maxdavid/sketch-foodreau",
+  "license": "MIT",
   "engines": {
     "sketch": ">=3.0"
   },
@@ -22,7 +25,6 @@
   "devDependencies": {
     "@skpm/builder": "^0.5.2"
   },
-  "author": "Max David <me@maxdavid.com>"
   "dependencies": {
     "@skpm/fs": "^0.2.3"
   }

@@ -5,7 +5,7 @@ const path = require('path')
 const util = require('util')
 const fs = require('@skpm/fs')
 
-const FOLDER = path.join(os.tmpdir(), 'com.sketchapp.foodreau-plugin')
+const FOLDER = path.join(os.tmpdir(), 'com.maxdavid.sketch.foodreau-plugin')
 
 const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1'
 const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servings','readyInMinutes','extendedIngredients','vegetarian','vegan','glutenFree','dairyFree','veryHealthy','cheap','veryPopular','sustainable','lowFodmap','ketogenic','whole30','weightWatcherSmartPoints','pricePerServing','gaps','healthScore','id']
