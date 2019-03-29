@@ -7,7 +7,7 @@ const API_OPTIONS = { 'headers': { 'X-RapidAPI-Key': API_KEY } };
 const JSON_KEYS = ['title','creditText','sourceUrl','image','instructions','extendedIngredients'];
 const BACKUP_FILE = 'recipes.js'
 
-const NUM_BACKUPS = 5;
+const NUM_BACKUPS = 30;
 const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=' + NUM_BACKUPS;
 
 let JSON_OBJS = createObjs();
