@@ -1,93 +1,44 @@
-# foodreau
+![Foodreau logo](https://github.com/maxdavid/sketch-foodreau/blob/master/assets/icon-rounded-small.png)
+# Foodreau
+A simple Sketch plugin to fill text and image layers with recipe-related content. Useful for designing food-related layouts without resorting to Lorem Ipsum.
 
-_This plugin was created using `skpm`. For a detailed explanation on how things work, checkout the [skpm Readme](https://github.com/skpm/skpm/blob/master/README.md)._
+## Installation
+### Sketch plugin manager 
+In the 'Catalog' tab of [Sketch Plugin Manager,](https://mludowise.github.io/Sketch-Plugin-Manager/) search for 'Foodreau'
+
+### Manual
+1. Download zip and extract
+2. In Sketch `Plugins > Manage Plugins...`
+3. Click the cog-wheel icon in lower right, and select `Reveal Plugins Folder`
+4. Move extracted zip to the Plugins directory
 
 ## Usage
+Can be used like other DataSupplier plugins. Right-click a layer to fill with recipe information, or use the toolbar Data dropdown.
 
-Install the dependencies
+To fill text layers with the appropriate information, the text layer must be named accordingly. Below is a short list of the most commonly used fields:
 
-```bash
-npm install
+|Layer name           |Description                                  |
+|:--------------------|:--------------------------------------------|
+|`title`              |Title of the recipe                          |
+|`instructions`       |Full text of recipe preparation instructions |
+|`extendedIngredients`|Collected list of recipe ingredients         |
+|`creditText`         |Name of recipe source                        |
+|`sourceUrl`          |URL of recipe source                         |
+
+Additional fields are [listed in the docs.](https://github.com/maxdavid/sketch-foodreau/blob/master/docs/layer-names.md) Image layer names can be anything.
+
+## Advanced
+This plugin comes bundled with a number of offline recipes that be used without restriction. They can be found [here.](https://github.com/maxdavid/sketch-foodreau/blob/master/assets/backup/recipes.js)
+
+If the offline recipes are not enough, this plugin can also connect to [Spoonacular's recipe API.](https://spoonacular.com/food-api) Register for a freemium API key through [RapidAPI.](https://rapidapi.com/spoonacular/api/recipe-food-nutrition/pricing) Clone this repo, then create the file `srv/.secret.js` and store your key like so:
+```javascript
+export const spoonacular = {
+  'apikey' : 'API_KEY_GOES_HERE'
+};
 ```
+Run `npm install` to rebuild the plugin, and you should be good to go.
 
-Once the installation is done, you can run some commands inside the project folder:
-
-```bash
-npm run build
-```
-
-To watch for changes:
-
-```bash
-npm run watch
-```
-
-Additionally, if you wish to run the plugin every time it is built:
-
-```bash
-npm run start
-```
-
-## Custom Configuration
-
-### Babel
-
-To customize Babel, you have two options:
-
-* You may create a [`.babelrc`](https://babeljs.io/docs/usage/babelrc) file in your project's root directory. Any settings you define here will overwrite matching config-keys within skpm preset. For example, if you pass a "presets" object, it will replace & reset all Babel presets that skpm defaults to.
-
-* If you'd like to modify or add to the existing Babel config, you must use a `webpack.skpm.config.js` file. Visit the [Webpack](#webpack) section for more info.
-
-### Webpack
-
-To customize webpack create `webpack.skpm.config.js` file which exports function that will change webpack's config.
-
-```js
-/**
- * Function that mutates original webpack config.
- * Supports asynchronous changes when promise is returned.
- *
- * @param {object} config - original webpack config.
- * @param {boolean} isPluginCommand - whether the config is for a plugin command or a resource
- **/
-module.exports = function(config, isPluginCommand) {
-  /** you can change config here **/
-}
-```
-
-## Debugging
-
-To view the output of your `console.log`, you have a few different options:
-
-* Use the [`sketch-dev-tools`](https://github.com/skpm/sketch-dev-tools)
-* Open `Console.app` and look for the sketch logs
-* Look at the `~/Library/Logs/com.bohemiancoding.sketch3/Plugin Output.log` file
-
-Skpm provides a convenient way to do the latter:
-
-```bash
-skpm log
-```
-
-The `-f` option causes `skpm log` to not stop when the end of logs is reached, but rather to wait for additional data to be appended to the input
-
-## Publishing your plugin
-
-```bash
-skpm publish <bump>
-```
-
-(where `bump` can be `patch`, `minor` or `major`)
-
-`skpm publish` will create a new release on your GitHub repository and create an appcast file in order for Sketch users to be notified of the update.
-
-You will need to specify a `repository` in the `package.json`:
-
-```diff
-...
-+ "repository" : {
-+   "type": "git",
-+   "url": "git+https://github.com/ORG/NAME.git"
-+  }
-...
-```
+## Upcoming Features
+* Keyword recipe searching
+* More curated offline backup
+* Runner installation
