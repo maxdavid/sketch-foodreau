@@ -7,8 +7,9 @@ const fs = require('@skpm/fs')
 
 const FOLDER = path.join(os.tmpdir(), 'com.maxdavid.sketch.foodreau-plugin')
 
-const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1'
+const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/'
 const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servings','readyInMinutes','extendedIngredients','vegetarian','vegan','glutenFree','dairyFree','veryHealthy','cheap','veryPopular','sustainable','lowFodmap','ketogenic','whole30','weightWatcherSmartPoints','pricePerServing','gaps','healthScore','id']
+const API_RANDOM_PARAM = 'random?number=1'
 
 let API_KEY = getAPIKey()
 let API_OPTIONS = { 'headers': { 'X-RapidAPI-Key': API_KEY } }
@@ -76,7 +77,7 @@ function getRandomRecipeSection (item, index, dataKey, section) {
     section = 'image'
   }
   if (API_KEY) {
-    fetch(API_ENDPOINT, API_OPTIONS)
+    fetch(API_ENDPOINT + API_RANDOM_PARAM, API_OPTIONS)
       .then(res => res.json())
       .then(json => {
         if (json.message) {
