@@ -1,7 +1,7 @@
 {
   "name": "Foodreau",
   "description": "Data supplier plugin for filling textboxes with food recipes",
-  "version" : "1.0.0",
+  "version" : "1.0.2",
   "author": "Max David",
   "homepage": "https://github.com/maxdavid/sketch-foodreau",
   "identifier": "com.maxdavid.sketch.foodreau-plugin",
@@ -23,7 +23,8 @@
           "SupplyRandomTitle": "onSupplyRandomTitle",
           "SupplyRandomSource": "onSupplyRandomSource",
           "SupplyRandomContent": "onSupplyRandomContent",
-          "SupplyRandomImage": "onSupplyRandomContent"
+          "SupplyRandomImage": "onSupplyRandomContent",
+          "SearchRecipe" : "onSearchRecipe"
         }
       }
     }
