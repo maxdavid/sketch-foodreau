@@ -24,7 +24,8 @@
           "SupplyRandomSource": "onSupplyRandomSource",
           "SupplyRandomContent": "onSupplyRandomContent",
           "SupplyRandomImage": "onSupplyRandomContent",
-          "SearchRecipe" : "onSearchRecipe"
+          "SearchRecipe" : "onSearchRecipe",
+          "SearchImage" : "onSearchImage"
         }
       }
     }

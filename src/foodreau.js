@@ -23,6 +23,7 @@ export function onStartup () {
   DataSupplier.registerDataSupplier('public.text', 'Random Recipe Content from Layer Names', 'SupplyRandomContent')
   DataSupplier.registerDataSupplier('public.text', 'Search Recipe...', 'SearchRecipe')
   DataSupplier.registerDataSupplier('public.image', 'Random Recipe Image', 'SupplyRandomImage')
+  DataSupplier.registerDataSupplier('public.image', 'Search Recipe Image...', 'SearchImage')
 }
 
 export function onShutdown () {
@@ -71,6 +72,24 @@ export function onSupplyRandomContent (context) {
       getRandomRecipeSection(item, index, dataKey, item.name)
     }
   })
+}
+
+export function onSearchImage (context) {
+  UI.getInputFromUser("Enter a recipe search term...",
+    { initialValue: 'burrito' },
+    (err, searchTerm) => { 
+      if (err) {
+        console.log(err)
+        return
+      } else {
+        const dataKey = context.data.key
+        const items = util.toArray(context.data.items).map(sketch.fromNative)
+        items.forEach((item, index) => {
+          getRecipe(item, index, dataKey, 'image', searchTerm)
+        })
+      }
+    }
+  )
 }
 
 export function onSearchRecipe (context) {
