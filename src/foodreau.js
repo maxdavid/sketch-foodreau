@@ -74,24 +74,6 @@ export function onSupplyRandomContent (context) {
   })
 }
 
-export function onSearchImage (context) {
-  UI.getInputFromUser("Enter a recipe search term...",
-    { initialValue: 'burrito' },
-    (err, searchTerm) => { 
-      if (err) {
-        console.log(err)
-        return
-      } else {
-        const dataKey = context.data.key
-        const items = util.toArray(context.data.items).map(sketch.fromNative)
-        items.forEach((item, index) => {
-          getRecipe(item, index, dataKey, 'image', searchTerm)
-        })
-      }
-    }
-  )
-}
-
 export function onSearchRecipe (context) {
   UI.getInputFromUser("Enter a recipe search term...",
     { initialValue: 'burrito' },
