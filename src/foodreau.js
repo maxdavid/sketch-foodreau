@@ -129,7 +129,8 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
   }
 
   function fetchRecipeInfo (response) {
-    let url = API_ENDPOINT + response.results[0].id + '/information'
+    let rand = Math.floor(Math.random() * API_NUM_RESULTS)
+    let url = API_ENDPOINT + response.results[rand].id + '/information'
     console.log(url)
     fetch(url, API_OPTIONS)
       .then(res => res.json())
