@@ -117,8 +117,7 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
         } else if (typeof json.recipes !== 'undefined') {
           loadData(json.recipes[0][section], dataKey, index, item)
         } else if (typeof json.results !== 'undefined') {
-          console.log(json)
-          fetchRecipeInfo(json, dataKey, index, item, section, searchTerm)
+          fetchRecipeInfo(json, dataKey, index, item, section)
         } else {
           return json
         }
@@ -128,10 +127,14 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
     loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   }
 
-  function fetchRecipeInfo (response) {
+  function fetchRecipeInfo (response, dataKey, index, item, section) {
     let rand = Math.floor(Math.random() * API_NUM_RESULTS)
+    if (section === 'image') {
+      let imageUrl = response['baseUri'] + response.results[rand]['image']
+      loadData(imageUrl, dataKey, index, item)
+      return
+    }
     let url = API_ENDPOINT + response.results[rand].id + '/information'
-    console.log(url)
     fetch(url, API_OPTIONS)
       .then(res => res.json())
       .then(json => {
