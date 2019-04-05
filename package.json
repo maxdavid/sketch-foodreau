@@ -1,9 +1,9 @@
 {
   "name": "foodreau",
   "version": "1.0.2",
-  "description": "Data supplier plugin for filling textboxes with food recipes",
+  "description": "Data supplier plugin for populating designs with real food recipes.",
   "author": "Max David",
-  "repository": "https://github.com/maxdavid/sketch-foodreau",
+  "repository": "https://github.com/maxdavid/sketch-foodreau.git",
   "license": "MIT",
   "engines": {
     "sketch": ">=3.0"
