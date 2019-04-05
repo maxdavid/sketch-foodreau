@@ -1,5 +1,5 @@
 const sketch = require('sketch')
-const { DataSupplier, UI } = sketch
+const { DataSupplier, UI, Settings } = sketch
 const os = require('os')
 const path = require('path')
 const util = require('util')
@@ -10,7 +10,7 @@ const FOLDER = path.join(os.tmpdir(), 'com.maxdavid.sketch.foodreau-plugin')
 const API_ENDPOINT = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/'
 const API_KEYS = ['title','creditText','sourceUrl','image','instructions','servings','readyInMinutes','extendedIngredients','vegetarian','vegan','glutenFree','dairyFree','veryHealthy','cheap','veryPopular','sustainable','lowFodmap','ketogenic','whole30','weightWatcherSmartPoints','pricePerServing','gaps','healthScore','id']
 const API_RANDOM_PARAM = 'random?number=1'
-const API_NUM_RESULTS = 10
+const API_NUM_RESULTS = 20
 const API_QUERY_PARAM = 'search?number=' + API_NUM_RESULTS + '&query='
 
 let API_KEY = getAPIKey()
@@ -75,13 +75,21 @@ export function onSupplyRandomContent (context) {
 }
 
 export function onSearchRecipe (context) {
+  // retrieve previous search term. If multiple layers are selected, find the first search term in group
+  // (thanks https://github.com/BohemianCoding/unsplash-sketchplugin/commit/2e763b049fb34cb4b072fab7147bd05b4c84faa1)
+  let selectedLayers = sketch.getSelectedDocument().selectedLayers.layers
+  let previousTerms = selectedLayers.map(layer => Settings.layerSettingForKey(layer, 'foodreau.search.term'))
+  let firstPreviousTerm = previousTerms.find(term => term !== undefined)
+  let previousTerm = firstPreviousTerm || 'Dinner'
   UI.getInputFromUser("Enter a recipe search term...",
-    { initialValue: 'burrito' },
+    { initialValue: previousTerm },
     (err, searchTerm) => { 
-      if (err) {
-        console.log(err)
-        return
-      } else {
+      if (err) { return } else {
+        if ((searchTerm = searchTerm.trim()) !== 'null') {
+          selectedLayers.forEach(layer => {
+            Settings.setLayerSettingForKey(layer, 'foodreau.search.term', searchTerm)
+          })
+        }
         const dataKey = context.data.key
         const items = util.toArray(context.data.items).map(sketch.fromNative)
         items.forEach((item, index) => {
@@ -129,8 +137,10 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
 
   function fetchRecipeInfo (response, dataKey, index, item, section) {
     let rand = Math.floor(Math.random() * API_NUM_RESULTS)
+    console.log(rand)
     if (section === 'image') {
       let imageUrl = response['baseUri'] + response.results[rand]['image']
+      console.log(imageUrl)
       loadData(imageUrl, dataKey, index, item)
       return
     }
