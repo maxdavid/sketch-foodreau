@@ -26,6 +26,7 @@
     "@skpm/builder": "^0.5.2"
   },
   "dependencies": {
-    "@skpm/fs": "^0.2.3"
+    "@skpm/fs": "^0.2.3",
+    "node-fetch": "^2.3.0"
   }
 }
