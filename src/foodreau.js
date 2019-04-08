@@ -39,11 +39,27 @@ export function onShutdown () {
 
 export function getAPIKey () {
   // return api key if exists, return false if not
-  let api = ''
-  try {
+  if (Settings.settingForKey('foodreau-apikey')) {
+    return Settings.settingForKey('foodreau-apikey')
+  }
+  try { // if not set in plugin settings, maybe it's stored in a file?
+    let api = ''
     api = require('./.secret.js')
     return api.spoonacular.apikey
   } catch (err) { return false }
+}
+
+export default function onSetAPIKey () {
+  let previousKey = Settings.settingForKey('foodreau-apikey') || ''
+  UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api)",
+    (err, input) => {
+      if (err) { 
+        return } else {
+        Settings.setSettingForKey('foodreau-apikey', input.trim())
+        UI.message('API Key successfully set!')
+      }
+    }
+  )
 }
 
 export function onSupplyRandomTitle (context) {

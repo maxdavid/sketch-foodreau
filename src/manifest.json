@@ -10,8 +10,12 @@
   "suppliesData": true,
   "commands": [
     {
-      "name": "Foodreau",
-      "script": "foodreau.js"
+      "name": "Set API key...",
+      "identifier": "setAPIKey",
+      "script": "foodreau.js",
+      "handler": {
+        "run": "onSetAPIKey"
+      }
     },
     {
       "script": "foodreau.js",
@@ -30,6 +34,9 @@
     }
   ],
   "menu": {
-    "title": "Foodreau"
+    "title": "Foodreau",
+    "items": [
+      "setAPIKey"
+    ]
   }
 }
