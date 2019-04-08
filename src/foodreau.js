@@ -54,6 +54,7 @@ export default function onSetAPIKey () {
   UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api)",
     (err, input) => {
       if (err) { 
+        UI.message('No API key set! Using backup recipes...')
         return } else {
         Settings.setSettingForKey('foodreau-apikey', input.trim())
         UI.message('API Key successfully set!')
@@ -143,7 +144,7 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
         } else if (typeof json.results !== 'undefined') {
           fetchRecipeInfo(json, dataKey, index, item, section)
         } else {
-          return json
+          loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
         }
       })
       .catch(err => console.log(err))
