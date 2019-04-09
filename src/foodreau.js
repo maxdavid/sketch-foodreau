@@ -67,7 +67,7 @@ export function onSupplyRandomTitle (context) {
   const dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    getRandomRecipeSection(item, index, dataKey, 'title')
+    getRecipe(item, index, dataKey, 'title')
   })
 }
 
@@ -75,7 +75,7 @@ export function onSupplyRandomSource (context) {
   const dataKey = context.data.key
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach((item, index) => {
-    getRandomRecipeSection(item, index, dataKey, 'creditText')
+    getRecipe(item, index, dataKey, 'creditText')
   })
 }
 
@@ -86,7 +86,7 @@ export function onSupplyRandomContent (context) {
     if (!API_KEYS.includes(item.name) && item.type === 'Text') {
       UI.message('"' + item.name + '" ' + 'is not a valid recipe field name')
     } else {
-      getRandomRecipeSection(item, index, dataKey, item.name)
+      getRecipe(item, index, dataKey, item.name)
     }
   })
 }
@@ -178,85 +178,6 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
 
   function loadData (data, dataKey, index, item) {
     //console.log(data)
-    if (item.type === 'Text') {
-      if (typeof data === 'object') {
-        data = convertIngredientsArray(data)
-      }
-      DataSupplier.supplyDataAtIndex(dataKey, data, index)
-    } else {
-      return getImageFromURL(data).then(imagePath => {
-        if (!imagePath) {
-          return
-        }
-        DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
-      })
-    }
-
-    function convertIngredientsArray (data) {
-      let text = ''
-      for (var ingredient in data) {
-        text += data[ingredient]['original'] + '\n'
-      }
-      return text
-    }
-
-    function getImageFromURL (url) {
-      return fetch(url)
-        .then(res => res.blob())
-        .then(saveTempFileFromImageData)
-        .catch((err) => {
-          console.error(err)
-          return context.plugin.urlForResourceNamed('placeholder.png').path()
-        })
-    }
-
-    function saveTempFileFromImageData (imageData) {
-      const guid = NSProcessInfo.processInfo().globallyUniqueString()
-      const imagePath = path.join(FOLDER, `${guid}.jpg`)
-      try {
-        fs.mkdirSync(FOLDER)
-      } catch (err) {
-        // probably because the folder already exists
-      }
-      try {
-        fs.writeFileSync(imagePath, imageData, 'NSData')
-        return imagePath
-      } catch (err) {
-        console.error(err)
-        return undefined
-      }
-    }
-  }
-}
-
-function getRandomRecipeSection (item, index, dataKey, section) {
-  // section must be in API_KEYS or item be an image
-  UI.message('Fetching recipe...')
-  if (item.type != 'Text') {
-    section = 'image'
-  }
-  if (API_KEY) {
-    fetch(API_ENDPOINT + API_RANDOM_PARAM, API_OPTIONS)
-      .then(res => res.json())
-      .then(json => {
-        if (json.message) {
-          return Promise.reject(json.message)
-        } else if (typeof json.recipes !== 'undefined') {
-          return json
-        } else {
-          return json
-        }
-      })
-      .then(json => {
-        loadData(json.recipes[0][section], dataKey, index, item)
-      })
-      .catch(err => console.log(err))
-  } else {
-    loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
-  }
-
-  function loadData (data, dataKey, index, item) {
-    console.log(data)
     if (item.type === 'Text') {
       if (typeof data === 'object') {
         data = convertIngredientsArray(data)
