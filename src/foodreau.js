@@ -39,8 +39,8 @@ export function onShutdown () {
 
 export function getAPIKey () {
   // return api key if exists, return false if not
-  if (Settings.settingForKey('foodreau-apikey')) {
-    return Settings.settingForKey('foodreau-apikey')
+  if (Settings.globalSettingForKey('foodreau.apikey')) {
+    return Settings.globalSettingForKey('foodreau.apikey')
   }
   try { // if not set in plugin settings, maybe it's stored in a file?
     let api = ''
@@ -50,17 +50,21 @@ export function getAPIKey () {
 }
 
 export default function onSetAPIKey () {
-  let previousKey = Settings.settingForKey('foodreau-apikey') || ''
-  UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api)",
-    (err, input) => {
-      if (err) { 
-        UI.message('No API key set! Using backup recipes...')
-        return } else {
-        Settings.setSettingForKey('foodreau-apikey', input.trim())
-        UI.message('API Key successfully set!')
+  let previousKey = '' || Settings.globalSettingForKey('foodreau.apikey')
+  try {
+    UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api",
+      { initialValue: previousKey },
+      (err, input) => {
+        if (err) { 
+          UI.message('No API key set! Using backup recipes...')
+          return 
+        } else {
+          Settings.setGlobalSettingForKey('foodreau.apikey', input.trim())
+          UI.message('API Key successfully set!')
+        }
       }
-    }
-  )
+    )
+  } catch (err) { return }
 }
 
 export function onSupplyRandomTitle (context) {
@@ -144,20 +148,23 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
         } else if (typeof json.results !== 'undefined') {
           fetchRecipeInfo(json, dataKey, index, item, section)
         } else {
+          UI.message('Invalid API key, using backup recipes...')
           loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        UI.message('Invalid API key, using backup recipes...')
+        loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
+      })
   } else {
     loadData(BACKUP_RECIPES[section][Math.floor(Math.random() * BACKUP_RECIPES[section].length)], dataKey, index, item)
   }
 
   function fetchRecipeInfo (response, dataKey, index, item, section) {
     let rand = Math.floor(Math.random() * API_NUM_RESULTS)
-    console.log(rand)
     if (section === 'image') {
       let imageUrl = response['baseUri'] + response.results[rand]['image']
-      console.log(imageUrl)
       loadData(imageUrl, dataKey, index, item)
       return
     }
@@ -168,7 +175,6 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
         if (json.message) {
           return Promise.reject(json.message)
         } else {
-          console.log(json)
           loadData(json[section], dataKey, index, item)
           return json
         }
@@ -177,7 +183,6 @@ function getRecipe (item, index, dataKey, section, searchTerm) {
   }
 
   function loadData (data, dataKey, index, item) {
-    //console.log(data)
     if (item.type === 'Text') {
       if (typeof data === 'object') {
         data = convertIngredientsArray(data)
