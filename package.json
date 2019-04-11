@@ -1,6 +1,6 @@
 {
   "name": "foodreau",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Data supplier plugin for populating designs with real food recipes.",
   "author": "Max David",
   "repository": "https://github.com/maxdavid/sketch-foodreau.git",
