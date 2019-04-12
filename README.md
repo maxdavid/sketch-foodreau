@@ -1,10 +1,13 @@
-![Foodreau logo](https://github.com/maxdavid/sketch-foodreau/blob/master/assets/icon-rounded-small.png)
+![Foodreau logo](https://github.com/maxdavid/sketch-foodreau/blob/master/assets/icon-rounded-wide.png)
 # Foodreau
 A simple Sketch plugin to fill text and image layers with recipe-related content. Useful for designing food-related layouts without resorting to Lorem Ipsum.
 
 ## Installation
 ### Sketch plugin manager 
 In the 'Catalog' tab of [Sketch Plugin Manager,](https://mludowise.github.io/Sketch-Plugin-Manager/) search for 'Foodreau'
+
+### Runner
+In the Runner prompt, type `install`, then hit the Tab key, then type `foodreau`
 
 ### Manual
 1. Download zip and extract
@@ -27,18 +30,18 @@ To fill text layers with the appropriate information, the text layer must be nam
 
 Additional fields are [listed in the docs.](https://github.com/maxdavid/sketch-foodreau/blob/master/docs/layer-names.md) Image layer names can be anything.
 
-## Advanced
+## API
 This plugin comes bundled with a number of offline recipes that be used without restriction. They can be found [here.](https://github.com/maxdavid/sketch-foodreau/blob/master/assets/backup/recipes.js)
 
-If the offline recipes are not enough, this plugin can also connect to [Spoonacular's recipe API.](https://spoonacular.com/food-api) Register for a freemium API key through [RapidAPI.](https://rapidapi.com/spoonacular/api/recipe-food-nutrition/pricing) Clone this repo, then create the file `srv/.secret.js` and store your key like so:
+If the offline recipes are not enough, this plugin can also connect to [Spoonacular's recipe API.](https://spoonacular.com/food-api) Register for a freemium API key through [RapidAPI.](https://rapidapi.com/spoonacular/api/recipe-food-nutrition/pricing) 
+
+In the plugin menu within Sketch, navigate to the Foodreau options and click `Set API key...`. Your key will persist between sessions.
+
+#### Advanced
+Wanna store your API key on disk? Clone this repo, then create the file `srv/.secret.js` and store your key like so:
 ```javascript
 export const spoonacular = {
   'apikey' : 'API_KEY_GOES_HERE'
 };
 ```
 Run `npm install` to rebuild the plugin, and you should be good to go.
-
-## Upcoming Features
-* Keyword recipe searching
-* More curated offline backup
-* Runner installation
