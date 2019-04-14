@@ -39,8 +39,8 @@ export function onShutdown () {
 
 export function getAPIKey () {
   // return api key if exists, return false if not
-  if (Settings.globalSettingForKey('foodreau.apikey')) {
-    return Settings.globalSettingForKey('foodreau.apikey')
+  if (Settings.settingForKey('foodreau.apikey')) {
+    return Settings.settingForKey('foodreau.apikey')
   }
   try { // if not set in plugin settings, maybe it's stored in a file?
     let api = ''
@@ -50,7 +50,7 @@ export function getAPIKey () {
 }
 
 export default function onSetAPIKey () {
-  let previousKey = '' || Settings.globalSettingForKey('foodreau.apikey')
+  let previousKey = '' || Settings.settingForKey('foodreau.apikey')
   try {
     UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api",
       { initialValue: previousKey },
@@ -59,7 +59,7 @@ export default function onSetAPIKey () {
           UI.message('No API key set! Using backup recipes...')
           return 
         } else {
-          Settings.setGlobalSettingForKey('foodreau.apikey', input.trim())
+          Settings.setSettingForKey('foodreau.apikey', input.trim())
           UI.message('API Key successfully set!')
         }
       }
