@@ -18,7 +18,13 @@ In the Runner prompt, type `install`, then hit the Tab key, then type `foodreau`
 ## Usage
 Can be used like other DataSupplier plugins. Right-click a layer to fill with recipe information, or use the toolbar Data dropdown.
 
-To fill text layers with the appropriate information, the text layer must be named accordingly. Below is a short list of the most commonly used fields:
+![Usage example GIF](https://github.com/maxdavid/sketch-foodreau/raw/master/assets/foodreau-example-usage.gif)
+
+To fill text layers with the appropriate information, the text layer must be named accordingly.
+
+![Layer naming example](https://github.com/maxdavid/sketch-foodreau/raw/master/assets/foodreau-example-layers.png)
+
+Below is a short list of the most commonly used fields:
 
 |Layer name           |Description                                  |
 |:--------------------|:--------------------------------------------|
