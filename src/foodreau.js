@@ -51,20 +51,26 @@ export function getAPIKey () {
 
 export default function onSetAPIKey () {
   let previousKey = '' || Settings.settingForKey('foodreau.apikey')
-  try {
+  if (sketch.version.sketch < 53) {
+    const newKey = UI.getStringFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api", previousKey).trim()
+    if (newKey !== 'null') {
+      Settings.setSettingForKey('foodreau.apikey', newKey)
+      UI.message('API Key successfully set!')
+    }
+  } else {
     UI.getInputFromUser("Enter your spoonacular API Key\n\nDon't have one? Register for free:\nhttps://spoonacular.com/food-api",
       { initialValue: previousKey },
-      (err, input) => {
+      (err, newKey) => {
         if (err) { 
           UI.message('No API key set! Using backup recipes...')
           return 
         } else {
-          Settings.setSettingForKey('foodreau.apikey', input.trim())
+          Settings.setSettingForKey('foodreau.apikey', newKey.trim())
           UI.message('API Key successfully set!')
         }
       }
     )
-  } catch (err) { return }
+  }
 }
 
 export function onSupplyRandomTitle (context) {
@@ -102,27 +108,45 @@ export function onSearchRecipe (context) {
   let previousTerms = selectedLayers.map(layer => Settings.layerSettingForKey(layer, 'foodreau.search.term'))
   let firstPreviousTerm = previousTerms.find(term => term !== undefined)
   let previousTerm = firstPreviousTerm || 'Dinner'
-  UI.getInputFromUser("Enter a recipe search term...",
-    { initialValue: previousTerm },
-    (err, searchTerm) => { 
-      if (err) { return } else {
-        if ((searchTerm = searchTerm.trim()) !== 'null') {
-          selectedLayers.forEach(layer => {
-            Settings.setLayerSettingForKey(layer, 'foodreau.search.term', searchTerm)
+  if (sketch.version.sketch < 53) {
+    const searchTerm = UI.getStringFromUser('Enter a recipe search term...', previousTerm).trim()
+    if (searchTerm !== 'null') {
+      selectedLayers.forEach(layer => {
+        Settings.setLayerSettingForKey(layer, 'foodreau.search.term', searchTerm)
+      })
+      const dataKey = context.data.key
+      const items = util.toArray(context.data.items).map(sketch.fromNative)
+      items.forEach((item, index) => {
+        if (!API_KEYS.includes(item.name) && item.type === 'Text') {
+          UI.message('"' + item.name + '" ' + 'is not a valid recipe field name')
+        } else {
+          getRecipe(item, index, dataKey, item.name, searchTerm)
+        }
+      })
+    }
+  } else {
+    UI.getInputFromUser('Enter a recipe search term...',
+      { initialValue: previousTerm },
+      (err, searchTerm) => { 
+        if (err) { return } else {
+          if ((searchTerm = searchTerm.trim()) !== 'null') {
+            selectedLayers.forEach(layer => {
+              Settings.setLayerSettingForKey(layer, 'foodreau.search.term', searchTerm)
+            })
+          }
+          const dataKey = context.data.key
+          const items = util.toArray(context.data.items).map(sketch.fromNative)
+          items.forEach((item, index) => {
+            if (!API_KEYS.includes(item.name) && item.type === 'Text') {
+              UI.message('"' + item.name + '" ' + 'is not a valid recipe field name')
+            } else {
+              getRecipe(item, index, dataKey, item.name, searchTerm)
+            }
           })
         }
-        const dataKey = context.data.key
-        const items = util.toArray(context.data.items).map(sketch.fromNative)
-        items.forEach((item, index) => {
-          if (!API_KEYS.includes(item.name) && item.type === 'Text') {
-            UI.message('"' + item.name + '" ' + 'is not a valid recipe field name')
-          } else {
-            getRecipe(item, index, dataKey, item.name, searchTerm)
-          }
-        })
       }
-    }
-  )
+    )
+  }
 }
 
 function getRecipe (item, index, dataKey, section, searchTerm) {
